@@ -1,17 +1,19 @@
-import PropTypes from 'prop-types';
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
+
 
 const UserCard = ({ user }) => {
   // eslint-disable-next-line react/prop-types
   const { firstName, lastName, age, bio, gender, photoUrl, skills } = user;
   console.log(user);
-  return (
-    <div className="card bg-base-300 w-96 shadow-sm">
+  return user && (
+    <div className="card bg-base-300 w-96 shadow-sm m-2 p-2">
       <figure>
-        <img src={photoUrl} alt="Shoes" className='size-70 mt-2'/>
+        <img src={photoUrl} alt="Shoes" className=''/>
       </figure>
       <div className="card-body">
         <h2 className="card-title">{firstName + " " + lastName}</h2>
-        <h3>{age && gender && age + " " + gender}</h3>
+        <h3>{age && gender && age + ", " + gender}</h3>
         <p>{bio && bio}</p>
         <div className="card-actions justify-center my-4">
           <button className="btn btn-primary">Ignored</button>
