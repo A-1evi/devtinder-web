@@ -5,7 +5,7 @@
 const UserCard = ({ user }) => {
   // eslint-disable-next-line react/prop-types
   const { firstName, lastName, age, bio, gender, photoUrl, skills } = user;
-  console.log(user);
+  
   return user && (
     <div className="card bg-base-300 w-96 shadow-sm m-2 p-2">
       <figure>
