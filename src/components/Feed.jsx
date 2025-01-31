@@ -7,7 +7,7 @@ import UserCard from "./UserCard";
 const Feed = () => {
   const dispatch = useDispatch();
   const feed = useSelector((store) => store.feed);
- 
+
   const fetchFeed = async () => {
     try {
       const res = await axios.get(BASE_URL + "/feed", {
@@ -22,6 +22,14 @@ const Feed = () => {
   useEffect(() => {
     fetchFeed();
   }, []);
+  if (!feed) return;
+
+  if (feed.length === 0)
+    return (
+      <div className="text-center my-16 font-extrabold text-4xl">
+        No new profile...
+      </div>
+    );
   return (
     feed && (
       <div className="flex justify-center my-8">
