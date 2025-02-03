@@ -42,7 +42,7 @@ const Login = () => {
     }
   };
   return (
-    <div className="card card-border bg-base-300 w-96 mx-auto my-12">
+    <div className="card card-border bg-base-300 sm:w-96 w-full sm:items-center -my-2 z-0 sm:my-12 ">
       <div className="card-body">
         <h2 className="card-title">{showSignup ? "Sign up" : "Login"}</h2>
         {showSignup && (
