@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { useNavigate } from "react-router";
 import { BASE_URL } from "../utils/constants";
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -13,6 +14,7 @@ const Login = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const handleLogin = async () => {
     try {
       const res = await axios.post(
@@ -20,13 +22,13 @@ const Login = () => {
         { email, password },
         { withCredentials: true }
       );
-
       dispatch(addUser(res.data));
-      return navigate("/");
+      navigate("/");
     } catch (err) {
-      setError(err.response.data || "Something went wrong");
+      setError(err.response?.data || "Something went wrong");
     }
   };
+
   const handleSignup = async () => {
     try {
       const res = await axios.post(
@@ -34,74 +36,75 @@ const Login = () => {
         { firstName, lastName, email, password },
         { withCredentials: true }
       );
-
       dispatch(addUser(res.data.data));
-      return navigate("/profile");
+      navigate("/profile");
     } catch (err) {
-      setError(err.response.data || "Something went wrong");
+      setError(err.response?.data || "Something went wrong");
     }
   };
+
   return (
-    <div className="card card-border bg-base-300 w-96 my-14  mx-auto ">
-      <div className="card-body">
-        <h2 className="card-title">{showSignup ? "Sign up" : "Login"}</h2>
+    <div className="bg-base-300 mx-auto my-8 p-4 w-96 max-w-md rounded shadow  ">
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold text-center">
+          {showSignup ? "Sign up" : "Login"}
+        </h2>
+
         {showSignup && (
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend">First name</legend>
+          <div>
+            <label className="block text-sm font-medium">First Name</label>
             <input
               type="text"
-              className="input"
-              placeholder=""
+              className="input input-bordered w-full mt-1"
+              placeholder="First Name"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
             />
-          </fieldset>
+          </div>
         )}
         {showSignup && (
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend">Last Name</legend>
+          <div>
+            <label className="block text-sm font-medium">Last Name</label>
             <input
               type="text"
-              className="input"
-              placeholder=""
+              className="input input-bordered w-full mt-1"
+              placeholder="Last Name"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
             />
-          </fieldset>
+          </div>
         )}
-        <fieldset className="fieldset">
-          <legend className="fieldset-legend">What is your email?</legend>
+        <div>
+          <label className="block text-sm font-medium">Email</label>
           <input
             type="text"
-            className="input"
-            placeholder=""
+            className="input input-bordered w-full mt-1"
+            placeholder="Your email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-        </fieldset>
-        <fieldset className="fieldset">
-          <legend className="fieldset-legend">Password</legend>
+        </div>
+        <div>
+          <label className="block text-sm font-medium">Password</label>
           <input
             type="password"
-            className="input"
-            placeholder=""
+            className="input input-bordered w-full mt-1"
+            placeholder="Your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-        </fieldset>
-        <p className="text-red-700">{error}</p>
+        </div>
+        {error && <p className="text-red-600 text-sm text-center">{error}</p>}
 
-        <div className="card-actions justify-between ">
-          <div>
-            <p
-              onClick={() => setShowSignup(!showSignup)}
-              className="cursor-pointer hover:underline hover:text-blue-400 "
-            >
-              {showSignup
-                ? "Already registered? Click here!"
-                : "New user? register now"}
-            </p>
-          </div>
+        <div className="flex items-center justify-between">
+          <p
+            onClick={() => setShowSignup(!showSignup)}
+            className="text-sm text-blue-500 cursor-pointer hover:underline"
+          >
+            {showSignup
+              ? "Already registered? Click here!"
+              : "New user? Register now"}
+          </p>
           <button
             className="btn btn-primary"
             onClick={showSignup ? handleSignup : handleLogin}
