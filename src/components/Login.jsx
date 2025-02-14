@@ -22,6 +22,7 @@ const Login = () => {
         { email, password },
         { withCredentials: true }
       );
+      localStorage.setItem("user", JSON.stringify(res.data));
       dispatch(addUser(res.data));
       navigate("/");
     } catch (err) {
@@ -44,7 +45,7 @@ const Login = () => {
   };
 
   return (
-    <div className="bg-base-300 mx-auto my-8 p-4 w-96 max-w-md rounded shadow  ">
+    <div className="bg-base-300 mx-auto my-8 p-4 w-96 max-w-md rounded shadow h-[515px] ">
       <div className="space-y-4">
         <h2 className="text-2xl font-bold text-center">
           {showSignup ? "Sign up" : "Login"}

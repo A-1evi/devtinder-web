@@ -26,13 +26,13 @@ const Feed = () => {
 
   if (feed.length === 0)
     return (
-      <div className="text-center my-16 font-extrabold text-4xl">
+      <div className="text-center my-16 font-extrabold text-4xl h-[450px]  ">
         No new profile...
       </div>
     );
   return (
     feed && (
-      <div className="flex justify-center my-8">
+      <div className="flex justify-center my-8 w-[500px]  ">
         <UserCard user={feed[0]} />
       </div>
     )

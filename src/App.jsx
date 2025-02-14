@@ -9,6 +9,7 @@ import Connections from "./components/Connections";
 import Request from "./components/Request";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import TermAndCondition from "./components/TermAndCondition";
+import Chat from "./components/Chat";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
               <Route path="/requests" element={<Request />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/term-and-condition" element={<TermAndCondition />} />
+              <Route path= "/chat/:targetId" element={<Chat />} />
             </Route>
           </Routes>
         </BrowserRouter>
