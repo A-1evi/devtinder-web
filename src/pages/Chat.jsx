@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createSocketConnection } from "../utils/socket";
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
@@ -12,6 +12,7 @@ const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [socket, setSocket] = useState(null);
+  const lastMessageRef = useRef(null);
 
   const fetchMessage = async () => {
     try {
@@ -34,6 +35,9 @@ const Chat = () => {
       console.log(err);
     }
   };
+  useEffect(() => {
+    lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
   useEffect(() => {
     fetchMessage();
   }, []);
@@ -83,7 +87,12 @@ const Chat = () => {
 
         {messages &&
           messages.map((msg, index) => (
-            <div key={index} className={`chat ${msg.firstName === user.firstName ? "chat-end" : "chat-start"}`}>
+            <div
+              key={index}
+              className={`chat ${
+                msg.firstName === user.firstName ? "chat-end" : "chat-start"
+              }`}
+            >
               <div className="chat-image avatar">
                 {/* <div className="w-10 rounded-full">
                   <img
@@ -98,11 +107,15 @@ const Chat = () => {
                   {new Date(msg.createdAt).toLocaleTimeString().slice(0, 5)}
                 </time>
               </div>
-              <div className="chat-bubble">{msg.message}</div>
+              <div
+                className="chat-bubble"
+                ref={index === messages.length - 1 ? lastMessageRef : null}
+              >
+                {msg.message}
+              </div>
               <div className="chat-footer opacity-50">Delivered</div>
             </div>
           ))}
-       
       </div>
       <div className="w-3/4 mx-auto rounded-lg p-4 overflow-y-auto">
         <div className="flex ">

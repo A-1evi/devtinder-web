@@ -1,50 +1,30 @@
-import axios from "axios";
-import { BASE_URL } from "../utils/constants";
-import { useDispatch } from "react-redux";
-import { removeUserFromFeed } from "../utils/feedSlice";
+import React from "react";
+/* eslint-disable react/prop-types */
+import { animated } from "@react-spring/web";
+import styles from "./UserCard.module.css";
 
-const UserCard = ({ user }) => {
-  const { _id, firstName, lastName, photoUrl, age, gender, bio } = user;
-  const dispatch = useDispatch();
-
-  const handleSendRequest = async (status, userId) => {
-    try {
-      const res = await axios.post(
-        BASE_URL + "/request/send/" + status + "/" + userId,
-        {},
-        { withCredentials: true }
-      );
-      dispatch(removeUserFromFeed(userId));
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
+const UserCard = ({ cardData, style, bind, imageUrl }) => {
   return (
-    <div className="card bg-base-300 w-80 justify-center  shadow-xl">
-      <figure>
-        <img src={user.photoUrl} alt="photo" />
-      </figure>
-      <div className="card-body">
-        <h2 className="card-title">{firstName + " " + lastName}</h2>
-        {age && gender && <p>{age + ", " + gender}</p>}
-        <p>{bio}</p>
-        <div className="card-actions justify-center my-4">
-          <button
-            className="btn btn-primary"
-            onClick={() => handleSendRequest("ignored", _id)}
-          >
-            Ignore
-          </button>
-          <button
-            className="btn btn-secondary"
-            onClick={() => handleSendRequest("interested", _id)}
-          >
-            Interested
-          </button>
+    <animated.div
+      {...bind}
+      className={styles.card}
+      style={{
+        ...style,
+        backgroundImage: `url(${imageUrl})`,
+      }}
+    >
+      <div className={styles.cardContent}>
+        <h2 className={styles.name}>
+          {cardData.firstName} {cardData.lastName}
+        </h2>
+        <p className={styles.bio}>{cardData.bio}</p>
+        <div className={styles.tags}>
+          <span className={styles.tag}>🎯 {cardData.role || "Developer"}</span>
+          <span className={styles.tag}>📍 {cardData.location || "Remote"}</span>
         </div>
       </div>
-    </div>
+    </animated.div>
   );
 };
+
 export default UserCard;

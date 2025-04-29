@@ -1,13 +1,11 @@
-
-
+import { Outlet, useNavigate } from "react-router";
+import NavBar from "./NavBar";
 import Footer from "./Footer";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
-import { addUser } from "../utils/userSlice";
+import { addUser } from "../utils/Store/slices/userSlice";
 import { useEffect } from "react";
-import NavBar from "./NavBar";
-import { Outlet, useNavigate } from "react-router";
 
 const Body = () => {
   const dispatch = useDispatch();
@@ -30,14 +28,15 @@ const Body = () => {
   };
 
   useEffect(() => {
-    
     fetchUser();
   }, []);
 
   return (
-    <div>
+    <div className="min-h-screen flex flex-col bg-base-200">
       <NavBar />
-      <Outlet />
+      <main className="flex-1 flex flex-col items-center justify-center w-full px-2 ">
+        <Outlet />
+      </main>
       <Footer />
     </div>
   );
