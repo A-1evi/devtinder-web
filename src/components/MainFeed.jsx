@@ -24,8 +24,8 @@ const MainFeed = () => {
   return (
     <div className="flex-1">
       {/* Filters and New Post */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center m-3  gap-3">
-        <div className="flex bg-card rounded-lg px-4 py-2 shadow-sm border border-gray-500">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center m-3   gap-3">
+        <div className="flex bg-card rounded-lg px-4 py-2 shadow-sm border border-gray-700 bg-gray-900">
           <Button
             variant={activeFilter === "Latest" ? "default" : "ghost"}
             className={`text-lg font-medium mr-2 rounded-lg px-4 py-1  transition-colors 

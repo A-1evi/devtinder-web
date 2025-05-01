@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+/* eslint-disable react/prop-types */
 import {
   Dialog,
   DialogContent,
@@ -72,9 +72,11 @@ const NewPostModal = ({ open, onOpenChange }) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[600px] bg-black text-white border-gray-800">
         <DialogHeader>
-          <DialogTitle className="text-xl">Create New Post</DialogTitle>
+          <DialogTitle className="text-xl text-white">
+            Create New Post
+          </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4 py-4">
@@ -85,6 +87,7 @@ const NewPostModal = ({ open, onOpenChange }) => {
               placeholder="What's your post about?"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              className="bg-gray-900 border-gray-800"
             />
           </div>
 
@@ -93,7 +96,7 @@ const NewPostModal = ({ open, onOpenChange }) => {
             <Textarea
               id="content"
               placeholder="Share your thoughts, questions, or insights..."
-              className="min-h-[120px]"
+              className="min-h-[120px] bg-gray-900 border-gray-800"
               value={content}
               onChange={(e) => setContent(e.target.value)}
             />
@@ -140,16 +143,20 @@ const NewPostModal = ({ open, onOpenChange }) => {
                 </div>
               ))}
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 bg-black">
               <Select value={currentTag} onValueChange={setCurrentTag}>
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="w-full bg-gray-900 border-gray-800">
                   <SelectValue placeholder="Select a tag" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-black">
                   {availableTags
                     .filter((tag) => !selectedTags.includes(tag))
                     .map((tag) => (
-                      <SelectItem key={tag} value={tag}>
+                      <SelectItem
+                        key={tag}
+                        value={tag}
+                        className="hover:bg-gray-900 focus:bg-gray-900 text-white cursor-pointer"
+                      >
                         {tag}
                       </SelectItem>
                     ))}
@@ -158,7 +165,7 @@ const NewPostModal = ({ open, onOpenChange }) => {
               <Button
                 type="button"
                 variant="outline"
-                className="shrink-0"
+                className="shrink-0 bg-transparent px-3 "
                 onClick={handleAddTag}
                 disabled={!currentTag}
               >
@@ -202,11 +209,11 @@ const NewPostModal = ({ open, onOpenChange }) => {
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline">Cancel</Button>
+            <Button className="py-2 px-2 bg-transparent" variant="outline">Cancel</Button>
           </DialogClose>
           <Button
             onClick={handleSubmit}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
+            className="bg-blue-600 hover:bg-blue-700 px-6 py-2 font-medium text-white"
           >
             Post
           </Button>
@@ -214,6 +221,6 @@ const NewPostModal = ({ open, onOpenChange }) => {
       </DialogContent>
     </Dialog>
   );
-};  
+};
 
 export default NewPostModal;

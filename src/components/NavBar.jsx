@@ -1,9 +1,9 @@
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate, useLocation } from "react-router";
 import { BASE_URL } from "../utils/constants";
 import { removeUser } from "../utils/Store/slices/userSlice";
-import {  CodeXml } from "lucide-react";
+import { CodeXml, LogIn } from "lucide-react";
 
 const NavBar = () => {
   const { user: { firstName, photoUrl } = {} } = useSelector(
@@ -11,6 +11,7 @@ const NavBar = () => {
   );
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = async () => {
     try {
@@ -23,11 +24,14 @@ const NavBar = () => {
     }
   };
 
+  // Hide login button on login page
+  const shouldShowLogin = location.pathname !== "/login";
+
   return (
-    <div className="navbar bg-base-300">
+    <div className="navbar bg-black">
       <div className="flex-1">
         <Link to="/" className="btn btn-ghost text-xl">
-         <CodeXml/>
+          <CodeXml />
           DevTinder
         </Link>
       </div>
@@ -69,8 +73,16 @@ const NavBar = () => {
             </ul>
           </div>
         </div>
+      ) : shouldShowLogin ? (
+        <button className="flex-none btn bg-blue-600 hover:bg-blue-700">
+          <Link to="/login" className="flex items-center gap-2">
+            <LogIn className="h-5 w-5" />
+            <span>Login</span>
+          </Link>
+        </button>
       ) : null}
     </div>
   );
 };
+
 export default NavBar;

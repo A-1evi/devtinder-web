@@ -18,7 +18,7 @@ const communities = [
 export default function LeftSidebar() {
   return (
     <aside className="hidden lg:block w-64 shrink-0">
-      <div className="bg-base-100 rounded-lg p-4 mb-4 sticky top-20">
+      <div className="bg-gray-900  rounded-lg p-4 mb-4 sticky top-20">
         <h3 className="font-medium text-sm text-white mb-4">Discover</h3>
         <ul className="space-y-1">
           <li>
