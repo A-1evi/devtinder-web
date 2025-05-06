@@ -21,6 +21,8 @@ import {
   SelectValue,
 } from "../components/ui/select";
 import { Plus, Code, Image, Link as LinkIcon, Tag } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { createPost } from "../utils/Store/slices/postSlice";
 
 const NewPostModal = ({ open, onOpenChange }) => {
   const [title, setTitle] = useState("");
@@ -30,6 +32,7 @@ const NewPostModal = ({ open, onOpenChange }) => {
   const [selectedTags, setSelectedTags] = useState([]);
   const [currentTag, setCurrentTag] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const [error, setError] = useState(null);
   const availableTags = [
@@ -46,13 +49,18 @@ const NewPostModal = ({ open, onOpenChange }) => {
     "Data Structures",
   ];
 
-  const handleSubmit = () => {
-    console.log("Post submitted:", {
-      title,
-      content,
-      codeSnippet,
-      selectedTags,
-    });
+  const handleSubmit = async (e) => {
+    if (!title || !content){
+      setError("Title and content are required");
+      return;
+    }
+    if (selectedTags.length === 0){
+      setError("Please select at least one tag");
+      return;
+    }
+    dispatch(createPost({title,content,selectedTags})).unwrap()
+    setIsLoading(true);
+
     setTitle("");
     setContent("");
     setCodeSnippet("");

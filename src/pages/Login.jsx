@@ -1,9 +1,7 @@
 import { useState } from "react";
-import axios from "axios";
-import { useDispatch } from "react-redux";
-import { addUser } from "../utils/Store/slices/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser, signUpUser } from "../utils/Store/slices/userSlice";
 import { useNavigate } from "react-router";
-import { BASE_URL } from "../utils/constants";
 import SplitText from "../components/ui/SplitText";
 
 const Login = () => {
@@ -12,38 +10,23 @@ const Login = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [isLoginForm, setIsLoginForm] = useState(true);
-  const [error, setError] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { error, loading } = useSelector((state) => state.user);
 
   const handleLogin = async () => {
-    try {
-      const res = await axios.post(
-        BASE_URL + "/login",
-        {
-          emailId,
-          password,
-        },
-        { withCredentials: true }
-      );
-      dispatch(addUser(res.data));
-      return navigate("/");
-    } catch (err) {
-      setError(err?.response?.data || "Something went wrong");
+    const result = await dispatch(loginUser({ emailId, password }));
+    if (loginUser.fulfilled.match(result)) {
+      navigate("/");
     }
   };
 
   const handleSignUp = async () => {
-    try {
-      const res = await axios.post(
-        BASE_URL + "/signup",
-        { firstName, lastName, emailId, password },
-        { withCredentials: true }
-      );
-      dispatch(addUser(res.data.data));
-      return navigate("/profile");
-    } catch (err) {
-      setError(err?.response?.data || "Something went wrong");
+    const result = await dispatch(
+      signUpUser({ firstName, lastName, emailId, password })
+    );
+    if (signUpUser.fulfilled.match(result)) {
+      navigate("/profile");
     }
   };
 
@@ -137,8 +120,13 @@ const Login = () => {
               <button
                 className="btn bg-blue-600 w-full"
                 onClick={isLoginForm ? handleLogin : handleSignUp}
+                disabled={loading}
               >
-                {isLoginForm ? "Login" : "Sign Up"}
+                {loading
+                  ? "Processing..."
+                  : isLoginForm
+                  ? "Login"
+                  : "Sign Up"}
               </button>
             </div>
 

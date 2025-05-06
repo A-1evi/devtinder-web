@@ -1,39 +1,55 @@
 
 /* eslint-disable react/prop-types */
+import { useDispatch } from "react-redux";
 import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { ThumbsUp, MessageSquare, Bookmark, Share2 } from "lucide-react";
+import { likePost } from "../utils/Store/slices/postSlice";
 
 const PostCard = ({post})  =>{
+  const dispatch = useDispatch();
+  const handleLike = async (postId) =>{
+    try {
+      dispatch(likePost(postId)).unwrap();
+      // Optionally, you can update the local state or UI after liking the post
+      // For example, you can show a success message or update the like count
+      // setLikeCount(likeCount + 1);
+    //   setIsLiked(true);
+    //   setLikeCount(post.likes + 1);
+    }catch (error){
+      console.error("Error liking post:", error);
+    }
+  }
 
   return (
-    <article className="bg-white rounded-lg shadow-sm overflow-hidden">
+    <article className="bg-black rounded-lg shadow-sm overflow-hidden border border-gray-700 ">
       <div className="p-4">
         <div className="flex items-center mb-3">
           <Avatar className="w-10 h-10 mr-3">
             {post.author.photoUrl ? (
-              <AvatarImage src={post.author.photoUrl} alt={post.author.name} />
+              <AvatarImage src={post.author.photoUrl} alt={post.author.firstName} />
             ) : (
               <AvatarFallback>
-                {post.author.username.substring(0, 2).toUpperCase()}
+                {post.author.firstName.substring(0, 2).toUpperCase()}
               </AvatarFallback>
             )}
           </Avatar>
           <div>
             <div className="flex items-center">
-              <h3 className="font-medium text-primary">{post.author.name}</h3>
+              <h3 className="font-medium text-primary">{post.author.firstName+ " " + post.author.lastName}</h3>
               <span className="ml-2 text-xs text-neutral-dark">
-                @{post.author.username}
+                @{post.author.email}
               </span>
             </div>
-            <p className="text-xs text-neutral-dark">{post.postedAt}</p>
+            <p className="text-xs text-neutral-dark">{post.createdAt}</p>
           </div>
         </div>
         <h2 className="text-lg font-semibold text-primary mb-2">
           {post.title}
         </h2>
         <p className="text-neutral-dark mb-3">{post.content}</p>
+        <p className="text-neutral-dark mb-3">{post.tags}</p>
         {post.codeSnippet && (
           <div className="bg-gray-900 rounded-md p-3 mb-3 overflow-x-auto">
             <pre className="font-mono text-sm text-gray-100">
@@ -79,7 +95,7 @@ const PostCard = ({post})  =>{
             </div>
           </div>
         )}
-        <div className="flex flex-wrap gap-2 mt-3 mb-1">
+        <div className="flex flex-wrap gap-2 ">
           {post.tags.map((tag, index) => (
             <Badge
               key={index}
@@ -91,9 +107,9 @@ const PostCard = ({post})  =>{
           ))}
         </div>
       </div>
-      <div className="border-t border-neutral-medium px-4 py-2 flex justify-between">
+      <div className=" px-4 py-2 flex justify-between">
         <div className="flex space-x-4">
-          <Button
+          <Button onClick={() => {handleLike(post._id)}}
             variant="ghost"
             size="sm"
             className="flex items-center text-neutral-dark hover:text-secondary"

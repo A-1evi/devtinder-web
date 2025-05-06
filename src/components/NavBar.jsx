@@ -2,16 +2,50 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useLocation } from "react-router";
 import { BASE_URL } from "../utils/constants";
-import { removeUser } from "../utils/Store/slices/userSlice";
+import { addUser, removeUser } from "../utils/Store/slices/userSlice";
 import { CodeXml, LogIn } from "lucide-react";
+import { useEffect } from "react";
+import { fetchPosts, setPosts } from "../utils/Store/slices/postSlice";
 
 const NavBar = () => {
-  const { user: { firstName, photoUrl } = {} } = useSelector(
-    (store) => store.user
-  );
+  const { user } = useSelector((store) => store.user) || {}; // Ensure `store.user` is not null
+  const { firstName, photoUrl } = user || {}; // Safely destructure `user`
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+
+ 
+
+  const fetchUser = async () => {
+    if (user) return;
+    try {
+      const res = await axios.get(BASE_URL + "/profile/view", {
+        withCredentials: true,
+      });
+      dispatch(addUser (res.data));
+    } catch (err) {
+      if (err.status === 401) {
+        navigate("/login");
+      }
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+  useEffect(() =>{
+    try { 
+      const postData = dispatch(fetchPosts()).unwrap();
+      // setPosts(postsData);
+      dispatch(setPosts(postData));
+      
+    } catch (error) {
+      setError(error.message);
+    }
+ 
+  },[dispatch]);
+
 
   const handleLogout = async () => {
     try {
@@ -19,7 +53,6 @@ const NavBar = () => {
       dispatch(removeUser());
       return navigate("/login");
     } catch (err) {
-      // Error logic maybe redirect to error page
       console.log(err);
     }
   };

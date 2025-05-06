@@ -2,15 +2,21 @@ import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Plus } from "lucide-react";
 import PostCard from "./PostCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NewPostModal from "./NewPostModal";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPosts } from "../utils/Store/slices/postSlice";
 
 const MainFeed = () => {
   const [activeFilter, setActiveFilter] = useState("Latest");
   const [isLoading, setIsLoading] = useState(false);
   const [posts, setPosts] = useState([]);
   const [newPostModalOpen, setNewPostModalOpen] = useState(false);
-
+  const dispatch = useDispatch();
+  const postsData = useSelector((state) => state.post.posts);
+  const loading = useSelector((state) => state.post.loading);
+  const errorMessage = useSelector((state) => state.post.error);
+  const [error, setError] = useState(null);
   const filterTags = [
     "All",
     "Web Development",
@@ -20,6 +26,17 @@ const MainFeed = () => {
     "AI/ML",
     "Data Science",
   ];
+
+  useEffect(() =>{
+    try { 
+       dispatch(fetchPosts()).unwrap();
+      setPosts(postsData);
+      
+    } catch (error) {
+      setError(error.message);
+    }
+ 
+  },[dispatch]);
 
   return (
     <div className="flex-1">
