@@ -114,6 +114,7 @@ const initialState = {
     posts: [],
     loading: false,
     error: null,
+    isLiked: false,
 
 }
 const postSlice = createSlice({
@@ -130,6 +131,7 @@ const postSlice = createSlice({
             const postIndex = state.posts.findIndex(post => post.id === action.payload.postId);
             if (postIndex !== -1) {
                 state.posts[postIndex].likes = action.payload.likes;
+
             }
         }
     },
@@ -140,12 +142,15 @@ const postSlice = createSlice({
         }
         )
         .addCase("post/fetchPosts/fulfilled", (state, action) => {
+             state.loading = false;
+              state.error = null;
+              // Check if the payload is an array
             if (Array.isArray(action.payload.posts)) {
                 state.posts = action.payload.posts;
               
               } else {
                 console.error("fetchPosts.fulfilled - Received non-array payload:", action.payload);
-                state.properties = [];
+              
                 state.error = { message: 'Received invalid property data from server.' };
               }
         }).addCase("post/fetchPosts/rejected", (state, action) => {
@@ -199,6 +204,7 @@ const postSlice = createSlice({
             const postIndex = state.posts.findIndex(post => post.id === action.payload.postId);
             if (postIndex !== -1) {
                 state.posts[postIndex].likes = action.payload.likes;
+                state.posts[postIndex].isLiked = action.payload.isLiked;
             }
         }
         ).addCase("post/likePost/rejected", (state, action) =>{
@@ -209,6 +215,6 @@ const postSlice = createSlice({
     }
 })
 
-export const { clearErrors ,setPosts} = postSlice.actions;
+export const { clearErrors ,setPosts, setLikes} = postSlice.actions;
 
 export default postSlice.reducer;

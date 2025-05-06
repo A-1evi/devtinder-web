@@ -9,14 +9,14 @@ import { fetchPosts } from "../utils/Store/slices/postSlice";
 
 const MainFeed = () => {
   const [activeFilter, setActiveFilter] = useState("Latest");
-  const [isLoading, setIsLoading] = useState(false);
-  const [posts, setPosts] = useState([]);
   const [newPostModalOpen, setNewPostModalOpen] = useState(false);
   const dispatch = useDispatch();
+
+  // Get posts, loading, and error state from Redux
   const postsData = useSelector((state) => state.post.posts);
   const loading = useSelector((state) => state.post.loading);
   const errorMessage = useSelector((state) => state.post.error);
-  const [error, setError] = useState(null);
+
   const filterTags = [
     "All",
     "Web Development",
@@ -27,57 +27,45 @@ const MainFeed = () => {
     "Data Science",
   ];
 
-  useEffect(() =>{
-    try { 
-       dispatch(fetchPosts()).unwrap();
-      setPosts(postsData);
-      
-    } catch (error) {
-      setError(error.message);
-    }
- 
-  },[dispatch]);
+  // Fetch posts when the component mounts
+  useEffect(() => {
+    dispatch(fetchPosts());
+  }, [dispatch]);
 
   return (
     <div className="flex-1">
       {/* Filters and New Post */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center m-3   gap-3">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center m-3 gap-3">
         <div className="flex bg-card rounded-lg px-4 py-2 shadow-sm border border-gray-700 bg-gray-900">
           <Button
             variant={activeFilter === "Latest" ? "default" : "ghost"}
-            className={`text-lg font-medium mr-2 rounded-lg px-4 py-1  transition-colors 
-              ${
-                activeFilter === "Latest"
-                  ? "bg-blue-600 text-white"
-                  : "text-gray-300 "
-              }
-            `}
+            className={`text-lg font-medium mr-2 rounded-lg px-4 py-1 transition-colors ${
+              activeFilter === "Latest"
+                ? "bg-blue-600 text-white"
+                : "text-gray-300"
+            }`}
             onClick={() => setActiveFilter("Latest")}
           >
             Latest
           </Button>
           <Button
             variant={activeFilter === "Top" ? "default" : "ghost"}
-            className={`text-lg font-medium mr-2 rounded-lg px-4 py-1  transition-colors 
-              ${
-                activeFilter === "Top"
-                  ? "bg-blue-600 text-white"
-                  : "text-gray-300 "
-              }
-            `}
+            className={`text-lg font-medium mr-2 rounded-lg px-4 py-1 transition-colors ${
+              activeFilter === "Top"
+                ? "bg-blue-600 text-white"
+                : "text-gray-300"
+            }`}
             onClick={() => setActiveFilter("Top")}
           >
             Top
           </Button>
           <Button
             variant={activeFilter === "Trending" ? "default" : "ghost"}
-            className={`text-lg font-medium  rounded-lg px-2 py-1   transition-colors 
-              ${
-                activeFilter === "Trending"
-                  ? "bg-blue-600 text-white"
-                  : "text-gray-300 "
-              }
-            `}
+            className={`text-lg font-medium rounded-lg px-2 py-1 transition-colors ${
+              activeFilter === "Trending"
+                ? "bg-blue-600 text-white"
+                : "text-gray-300"
+            }`}
             onClick={() => setActiveFilter("Trending")}
           >
             Trending
@@ -91,16 +79,16 @@ const MainFeed = () => {
           <Plus className="mr-2 h-4 w-4" /> New Post
         </Button>
       </div>
-      <NewPostModal 
-        open={newPostModalOpen} 
-        onOpenChange={setNewPostModalOpen} 
+      <NewPostModal
+        open={newPostModalOpen}
+        onOpenChange={setNewPostModalOpen}
       />
 
       {/* Filter Tags */}
       <div className="flex flex-wrap gap-2 mb-6">
-        {filterTags.map((tag, index) => (
+        {filterTags.map((tag) => (
           <Badge
-            key={index}
+            key={tag}
             variant="outline"
             className="text-xs font-medium bg-card border border-border px-3 py-1 rounded-full text-muted-foreground hover:border-blue-500 hover:text-blue-500 cursor-pointer transition-colors"
           >
@@ -111,12 +99,12 @@ const MainFeed = () => {
 
       {/* Posts Feed */}
       <div className="space-y-4">
-        {isLoading ? (
+        {loading ? (
           <div className="text-center py-8 text-muted-foreground">
             Loading posts...
           </div>
-        ) : posts && posts.length > 0 ? (
-          posts.map((post) => <PostCard key={post.id} post={post} />)
+        ) : postsData && postsData.length > 0 ? (
+          postsData.map((post) => <PostCard key={post._id} post={post} />)
         ) : (
           <div className="bg-card rounded-lg shadow-sm p-8 text-center border border-border">
             <h3 className="text-lg font-medium text-muted-foreground mb-2">
