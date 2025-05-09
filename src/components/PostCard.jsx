@@ -30,7 +30,10 @@ const PostCard = ({ post }) => {
         <div className="flex items-center mb-3">
           <Avatar className="w-10 h-10 mr-3">
             {post.author.photoUrl ? (
-              <AvatarImage src={post.author.photoUrl} alt={post.author.firstName} />
+              <AvatarImage
+                src={post.author.photoUrl}
+                alt={post.author.firstName}
+              />
             ) : (
               <AvatarFallback>
                 {post.author.firstName.substring(0, 2).toUpperCase()}
@@ -42,27 +45,37 @@ const PostCard = ({ post }) => {
               <h3 className="font-medium text-primary">
                 {post.author.firstName + " " + post.author.lastName}
               </h3>
-              <span className="ml-2 text-xs text-neutral-dark">@{post.author.email}</span>
+              <span className="ml-2 text-xs text-neutral-dark">
+                @{post.author.email}
+              </span>
             </div>
             <p className="text-xs text-neutral-dark">{post.createdAt}</p>
           </div>
         </div>
-        <h2 className="text-lg font-semibold text-primary mb-2">{post.title}</h2>
+        <h2 className="text-lg font-semibold text-primary mb-2">
+          {post.title}
+        </h2>
         <p className="text-neutral-dark mb-3">{post.content}</p>
         {post.codeSnippet && (
           <div className="bg-gray-900 rounded-md p-3 mb-3 overflow-x-auto">
-            <pre className="font-mono text-sm text-gray-100">{post.codeSnippet}</pre>
+            <pre className="font-mono text-sm text-gray-100">
+              {post.codeSnippet}
+            </pre>
           </div>
         )}
         {post.image && (
           <div className="mb-4 rounded-md overflow-hidden">
-            <img src={post.image} alt={post.title} className="w-full h-48 object-cover" />
+            <img
+              src={post.image}
+              alt={post.title}
+              className="w-full h-48 object-cover"
+            />
           </div>
         )}
         <div className="flex flex-wrap gap-2">
-          {post.tags.map((tag) => (
+          {post.tags.map((tag, index) => (
             <Badge
-              key={tag.id} // Use a unique identifier for each tag
+              key={tag.id || `${tag.name}-${index}`}
               variant="secondary"
               className={`bg-${tag.color}-100 text-${tag.color}-800 text-xs font-medium px-2 py-0.5 rounded`}
             >

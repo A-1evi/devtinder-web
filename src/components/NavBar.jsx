@@ -14,15 +14,13 @@ const NavBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
- 
-
   const fetchUser = async () => {
     if (user) return;
     try {
       const res = await axios.get(BASE_URL + "/profile/view", {
         withCredentials: true,
       });
-      dispatch(addUser (res.data));
+      dispatch(addUser(res.data));
     } catch (err) {
       if (err.status === 401) {
         navigate("/login");
@@ -34,18 +32,15 @@ const NavBar = () => {
   useEffect(() => {
     fetchUser();
   }, []);
-  useEffect(() =>{
-    try { 
+  useEffect(() => {
+    try {
       const postData = dispatch(fetchPosts()).unwrap();
       // setPosts(postsData);
       dispatch(setPosts(postData));
-      
     } catch (error) {
       setError(error.message);
     }
- 
-  },[dispatch]);
-
+  }, [dispatch]);
 
   const handleLogout = async () => {
     try {
@@ -86,7 +81,7 @@ const NavBar = () => {
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
             >
               <li>
-                <Link to="/profile" className="justify-between">
+                <Link to="/view-profile" className="justify-between">
                   Profile
                   <span className="badge">New</span>
                 </Link>
