@@ -5,7 +5,7 @@ import PostCard from "./PostCard";
 import { useEffect, useState } from "react";
 import NewPostModal from "./NewPostModal";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPosts } from "../utils/Store/slices/postSlice";
+import { fetchPosts, setPosts } from "../utils/Store/slices/postSlice";
 
 const MainFeed = () => {
   const [activeFilter, setActiveFilter] = useState("Latest");
@@ -15,7 +15,8 @@ const MainFeed = () => {
   // Get posts, loading, and error state from Redux
   const postsData = useSelector((state) => state.post.posts);
   const loading = useSelector((state) => state.post.loading);
-  const errorMessage = useSelector((state) => state.post.error);
+  const user = useSelector((state) => state.user.user);
+  const error = useSelector((state) => state.post.error);
 
   const filterTags = [
     "All",
@@ -29,7 +30,23 @@ const MainFeed = () => {
 
   // Fetch posts when the component mounts
   useEffect(() => {
-    dispatch(fetchPosts());
+    const loadPosts = async () => {
+      try {
+        const result = await dispatch(fetchPosts()).unwrap();
+        if (result?.posts) {
+          // Transform posts data to include calculated fields
+          const transformedPosts = result.posts.map((post) => ({
+            ...post,
+            totalLikes: post.likes.length,
+            isLiked: post.likes.some((like) => like.user === user?._id),
+          }));
+          dispatch(setPosts(transformedPosts));
+        }
+      } catch (error) {
+        console.error("Error loading posts:", error);
+      }
+    };
+    loadPosts();
   }, [dispatch]);
 
   return (
@@ -102,6 +119,10 @@ const MainFeed = () => {
         {loading ? (
           <div className="text-center py-8 text-muted-foreground">
             Loading posts...
+          </div>
+        ) : error ? (
+          <div className="text-center py-8 text-red-500">
+            Error loading posts: {error}
           </div>
         ) : postsData && postsData.length > 0 ? (
           postsData.map((post) => <PostCard key={post._id} post={post} />)

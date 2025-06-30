@@ -33,13 +33,17 @@ const NavBar = () => {
     fetchUser();
   }, []);
   useEffect(() => {
-    try {
-      const postData = dispatch(fetchPosts()).unwrap();
-      // setPosts(postsData);
-      dispatch(setPosts(postData));
-    } catch (error) {
-      setError(error.message);
-    }
+    const fetchPostData = async () => {
+      try {
+        const result = await dispatch(fetchPosts()).unwrap();
+        if (result && result.posts) {
+          dispatch(setPosts(result.posts));
+        }
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      }
+    };
+    fetchPostData();
   }, [dispatch]);
 
   const handleLogout = async () => {

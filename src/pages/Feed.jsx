@@ -93,7 +93,25 @@ const Feed = () => {
       const dir = xDir < 0 ? -1 : 1; // Direction should either point left or right
 
       // If card is released and trigger condition met, mark it as gone
-      if (!active && trigger) gone.add(index);
+      if (!active && trigger) {
+        gone.add(index);
+        // If swiped right (dir > 0), send connection request
+        if (dir > 0) {
+          const sendRequest = async () => {
+            try {
+              await axios.post(
+                BASE_URL + "/profile/request/" + feed[index]._id,
+                {},
+                { withCredentials: true }
+              );
+              console.log("Connection request sent!");
+            } catch (error) {
+              console.error("Failed to send connection request:", error);
+            }
+          };
+          sendRequest();
+        }
+      }
 
       api.start((i) => {
         if (index !== i) return; // Only affect the dragged card
@@ -171,7 +189,22 @@ const Feed = () => {
               }}
               bind={bind(i)}
               imageUrl={imageUrl}
-            />
+            >
+              <div
+                className={`absolute top-8 left-8 transform rotate-[-30deg] border-4 border-green-500 rounded-xl px-8 py-2 font-bold text-green-500 text-4xl ${
+                  x?.get() > 50 ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                CONNECT
+              </div>
+              <div
+                className={`absolute top-8 right-8 transform rotate-[30deg] border-4 border-red-500 rounded-xl px-8 py-2 font-bold text-red-500 text-4xl ${
+                  x?.get() < -50 ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                NOPE
+              </div>
+            </UserCard>
           </animated.div>
         );
       })}

@@ -9,15 +9,20 @@ import { useState } from "react";
 
 const PostCard = ({ post }) => {
   const dispatch = useDispatch();
-  const [isLiked, setIsLiked] = useState(post.isLiked || false); // Initialize based on post data
-  const [likeCount, setLikeCount] = useState(post.likes);
+  const currentUser = useSelector((state) => state.user.user);
+  const [isLiked, setIsLiked] = useState(
+    post.likes?.some((like) => like.user === currentUser?._id) || false
+  );
+  const [likeCount, setLikeCount] = useState(post.likes?.length || 0);
 
   const handleLike = async (postId) => {
     try {
-      const result = await dispatch(likePost(postId)).unwrap(); // Await the result of the action
-      if (result.success) {
-        setIsLiked(true);
-        setLikeCount((prevCount) => prevCount + 1);
+      const result = await dispatch(likePost(postId)).unwrap();
+      if (result) {
+        setIsLiked(!isLiked);
+        setLikeCount(result.likes.length);
+        // Update the post likes in the store
+        dispatch(setLikes({ postId, likes: result.likes }));
       }
     } catch (error) {
       console.error("Error liking post:", error);
